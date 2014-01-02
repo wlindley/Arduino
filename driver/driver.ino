@@ -1,11 +1,12 @@
+#include <Servo.h>
 #include "Program.h"
 #include "RGBLed.h"
 #include "Timer.h"
 #include "Sensor.h"
 
-#include "LedTempProgram.h"
+#include "MoodCueProgram.h"
 
-LedTempProgram program;
+MoodCueProgram program;
 
 void setup()
 {
