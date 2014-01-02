@@ -4,10 +4,11 @@
 #include "Timer.h"
 #include "Sensor.h"
 #include "AbsoluteServo.h"
+#include "PiezoSpeaker.h"
 
-#include "MoodCueProgram.h"
+#include "LightThereminProgram.h"
 
-MoodCueProgram program;
+LightThereminProgram program;
 
 void setup()
 {
