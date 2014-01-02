@@ -10,6 +10,7 @@ BufferedSensor	KEYWORD1
 TemperatureSensor	KEYWORD1
 PotSensor	KEYWORD1
 PhotoSensor	KEYWORD1
+PiezoSensor	KEYWORD1
 SampleBuffer	KEYWORD1
 
 #######################################
