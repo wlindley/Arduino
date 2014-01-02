@@ -6,9 +6,9 @@
 #include "AbsoluteServo.h"
 #include "PiezoSpeaker.h"
 
-#include "LightThereminProgram.h"
+#include "KnockLockProgram.h"
 
-LightThereminProgram program;
+KnockLockProgram program;
 
 void setup()
 {
