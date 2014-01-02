@@ -9,15 +9,15 @@ class IIntervalHandler
 
 class RepeatTimer
 {
-	public:
-		RepeatTimer();
-		void setDelay(float seconds);
-		void update(float dt);
-		void setHandler(IIntervalHandler* iHandler);
-	
-	private:
-		float timer, delay;
-		IIntervalHandler* handler;
+public:
+	RepeatTimer();
+	void setDelay(float seconds);
+	void update(float dt);
+	void setHandler(IIntervalHandler* iHandler);
+
+private:
+	float timer, delay;
+	IIntervalHandler* handler;
 };
 
 #endif

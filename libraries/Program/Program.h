@@ -3,17 +3,17 @@
 
 class Program
 {
-	public:
-		Program() : prevTime(0) {}
-		void setup();
-		void loop();
+public:
+	Program() : prevTime(0) {}
+	void setup();
+	void loop();
+
+protected:
+	virtual void init() {}
+	virtual void update(float dt) {}
 	
-	protected:
-		virtual void init() {}
-		virtual void update(float dt) {}
-		
-	private:
-		unsigned long prevTime;
+private:
+	unsigned long prevTime;
 };
 
 #endif

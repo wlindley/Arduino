@@ -3,15 +3,15 @@
 
 class SampleBuffer
 {
-	public:
-		SampleBuffer();
-		void addSample(float sample);
-		float getAverage();
-		void clear();
-	
-	private:
-		static const int NUM_SAMPLES = 11;
-		float samples[11];
+public:
+	SampleBuffer();
+	void addSample(float sample);
+	float getAverage();
+	void clear();
+
+private:
+	static const int NUM_SAMPLES = 11;
+	float samples[11];
 };
 
 #endif
