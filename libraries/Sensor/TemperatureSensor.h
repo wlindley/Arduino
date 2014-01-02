@@ -1,13 +1,13 @@
 #ifndef __TEMPERATURESENSOR_H__
 #define __TEMPERATURESENSOR_H__
 
-#include "Sensor.h"
+#include "BufferedSensor.h"
 
-class TemperatureSensor : public Sensor
+class TemperatureSensor : public BufferedSensor
 {
 public:
-	TemperatureSensor() : Sensor() {}
-	TemperatureSensor(int iPin) : Sensor(iPin) {}
+	TemperatureSensor() : BufferedSensor() {}
+	TemperatureSensor(int iPin) : BufferedSensor(iPin) {}
 	float getCelsius();
 };
 

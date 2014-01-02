@@ -1,12 +1,13 @@
 #include "SampleBuffer.h"
 #include <math.h>
+#include <limits.h>
 
-SampleBuffer::SampleBuffer()
+FloatSampleBuffer::FloatSampleBuffer()
 {
 	clear();
 }
 
-void SampleBuffer::addSample(float sample)
+void FloatSampleBuffer::addSample(float sample)
 {
 	for (int i = 0; i < NUM_SAMPLES; i++)
 	{
@@ -19,7 +20,7 @@ void SampleBuffer::addSample(float sample)
 	}
 }
 
-float SampleBuffer::getAverage()
+float FloatSampleBuffer::getAverage()
 {
 	float accumulator = 0.f;
 	int numSamples = 0;
@@ -34,10 +35,51 @@ float SampleBuffer::getAverage()
 	return accumulator / numSamples;
 }
 
-void SampleBuffer::clear()
+void FloatSampleBuffer::clear()
 {
 	for (int i = 0; i < NUM_SAMPLES; i++)
 	{
 		samples[i] = NAN;
+	}
+}
+
+IntSampleBuffer::IntSampleBuffer()
+{
+	clear();
+}
+
+void IntSampleBuffer::addSample(int sample)
+{
+	for (int i = 0; i < NUM_SAMPLES; i++)
+	{
+		if (INT_MIN == samples[i])
+		{
+			samples[i] = sample;
+			samples[(i + 1) % NUM_SAMPLES] = INT_MIN;
+			break;
+		}
+	}
+}
+
+int IntSampleBuffer::getAverage()
+{
+	int accumulator = 0.f;
+	int numSamples = 0;
+	for (int i = 0; i < NUM_SAMPLES; i++)
+	{
+		if (INT_MIN != samples[i])
+		{
+			accumulator += samples[i];
+			numSamples++;
+		}
+	}
+	return accumulator / numSamples;
+}
+
+void IntSampleBuffer::clear()
+{
+	for (int i = 0; i < NUM_SAMPLES; i++)
+	{
+		samples[i] = INT_MIN;
 	}
 }

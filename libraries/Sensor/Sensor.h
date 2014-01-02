@@ -6,7 +6,7 @@ class Sensor
 public:
 	Sensor();
 	Sensor(int iPin);
-	int getReading();
+	virtual int getReading();
 
 protected:
 	static const unsigned long MIN_READ_DELAY = 1; //milliseconds
