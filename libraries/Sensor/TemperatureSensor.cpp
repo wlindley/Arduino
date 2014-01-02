@@ -1,12 +1,9 @@
 #include "TemperatureSensor.h"
 #include <Arduino.h>
 
-TemperatureSensor::TemperatureSensor() : inputPin(-1) {}
+TemperatureSensor::TemperatureSensor() : Sensor() {}
 
-TemperatureSensor::TemperatureSensor(int iPin) : inputPin(iPin)
-{
-	pinMode(inputPin, INPUT);
-}
+TemperatureSensor::TemperatureSensor(int iPin) : Sensor(iPin) {}
 
 float TemperatureSensor::getCelsius()
 {
@@ -14,7 +11,7 @@ float TemperatureSensor::getCelsius()
 	{
 		return 0.f;
 	}
-	float voltage = (analogRead(inputPin) / 1024.f) * 5.f;
+	float voltage = (getReading() / 1024.f) * 5.f;
 	float temperature = (voltage - .5f) * 100.f;
 	return temperature;
 }

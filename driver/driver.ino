@@ -1,7 +1,7 @@
 #include "Program.h"
 #include "RGBLed.h"
 #include "Timer.h"
-#include "TemperatureSensor.h"
+#include "Sensor.h"
 
 #include "LedTempProgram.h"
 

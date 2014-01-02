@@ -9,16 +9,15 @@
 
 class LedTempProgram : public Program
 {
-	protected:
-		virtual void init();
-		virtual void update(float dt);
-	
-	private:
-		RGBLed outLed;
-		Timer inputTimer;
-		TemperatureSensor tempSensor;
-		SampleBuffer sampleBuffer;
-		float initialReading;
+protected:
+	virtual void init();
+	virtual void update(float dt);
+
+private:
+	RGBLed outLed;
+	TemperatureSensor tempSensor;
+	SampleBuffer sampleBuffer;
+	float initialReading;
 };
 
 #endif
