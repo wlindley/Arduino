@@ -6,12 +6,9 @@
 class TemperatureSensor : public Sensor
 {
 public:
-	TemperatureSensor();
-	TemperatureSensor(int iPin);
+	TemperatureSensor() : Sensor() {}
+	TemperatureSensor(int iPin) : Sensor(iPin) {}
 	float getCelsius();
-	
-private:
-	int inputPin;
 };
 
 #endif
