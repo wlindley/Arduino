@@ -14,6 +14,6 @@ void LightThereminProgram::update(float dt)
 
 	float value = sensor.getPercent();
 	Serial.println(value);
-	speaker.playTone(value, 20);
+	speaker.playTone(value, .1);
 	delay(10);
 }
