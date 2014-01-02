@@ -3,6 +3,7 @@
 #include "RGBLed.h"
 #include "Timer.h"
 #include "Sensor.h"
+#include "AbsoluteServo.h"
 
 #include "MoodCueProgram.h"
 

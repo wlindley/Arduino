@@ -2,7 +2,8 @@
 #define __MOODCUEPROGRAM_H__
 
 #include "Program.h"
-#include <Servo.h>
+#include "AbsoluteServo.h"
+#include "PotSensor.h"
 
 class MoodCueProgram : public Program
 {
@@ -11,9 +12,8 @@ protected:
 	virtual void update(float dt);
 
 private:
-	Servo servo;
-	int pos;
-	int speed;
+	AbsoluteServo servo;
+	PotSensor sensor;
 };
 
 #endif

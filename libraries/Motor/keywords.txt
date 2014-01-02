@@ -5,22 +5,12 @@
 #######################################
 # Datatypes (KEYWORD1)
 #######################################
-Sensor KEYWORD1
-TemperatureSensor	KEYWORD1
-PotSensor	KEYWORD1
-SampleBuffer	KEYWORD1
+AbsoluteServo	KEYWORD1
 
 #######################################
 # Methods and Functions (KEYWORD2)
 #######################################
-getReading	KEYWORD2
-getCelsius	KEYWORD2
-addSample	KEYWORD2
-getAverage	KEYWORD2
-clear	KEYWORD2
-getPercent	KEYWORD2
-getDegrees	KEYWORD2
-getRadians	KEYWORD2
+setRotation	KEYWORD2
 
 #######################################
 # Constants (LITERAL1)
