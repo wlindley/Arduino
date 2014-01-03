@@ -5,21 +5,10 @@
 #######################################
 # Datatypes (KEYWORD1)
 #######################################
-RepeatTimer	KEYWORD1
-Timer	KEYWORD1
 
 #######################################
 # Methods and Functions (KEYWORD2)
 #######################################
-setDelay	KEYWORD2
-getDelay	KEYWORD2
-update	KEYWORD2
-setHandler	KEYWORD2
-reset	KEYWORD2
-clear	KEYWORD2
-addDelay	KEYWORD2
-isTriggered	KEYWORD2
-getTimeRemaining	KEYWORD2
 
 #######################################
 # Constants (LITERAL1)
