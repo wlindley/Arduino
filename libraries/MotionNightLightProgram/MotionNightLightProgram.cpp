@@ -2,7 +2,7 @@
 #include <Arduino.h>
 
 const float LIGHT_THRESHOLD = .25f;
-const float VIBRATION_THRESHOLD = .05f;
+const float VIBRATION_THRESHOLD = 0.f;
 const float MAX_VIBRATION = 50;
 const float ON_TIME = 30.f;
 const float FADE_TIME = 30.f;
@@ -34,29 +34,30 @@ void MotionNightLightProgram::update(float dt)
 		onTimer.clear();
 		fadeTimer.clear();
 		led.off();
+		ledState = STATE_OFF;
 		return;
 	}
 
 	if (STATE_ON != ledState && vibrationSensor.getPercent() > VIBRATION_THRESHOLD)
 	{
-		Serial.println("detected vibration!");
+		//Serial.println("detected vibration!");
 		led.on();
 		onTimer.reset();
 		ledState = STATE_ON;
 	}
 	if (STATE_ON == ledState && onTimer.isTriggered())
 	{
-		Serial.println("switching to fade");
+		//Serial.println("switching to fade");
 		fadeTimer.reset();
 		ledState = STATE_FADE;
 	}
 	if (STATE_FADE == ledState)
 	{
-		Serial.println("fading");
+		//Serial.println("fading");
 		led.setIntensity(fadeTimer.getTimeRemaining() / fadeTimer.getDelay());
 		if (fadeTimer.isTriggered())
 		{
-			Serial.println("turning off");
+			//Serial.println("turning off");
 			led.off();
 			ledState = STATE_OFF;
 		}
