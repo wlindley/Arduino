@@ -19,6 +19,11 @@ void CrystalBallProgram::update(float dt)
 	bool curTiltState = tiltSwitch.getState();
 	if (!prevTiltState && curTiltState)
 	{
+		lcd->noDisplay();
+	}
+	else if (prevTiltState && !curTiltState)
+	{
+		lcd->display();
 		showRandomAnswer();
 	}
 	prevTiltState = curTiltState;
