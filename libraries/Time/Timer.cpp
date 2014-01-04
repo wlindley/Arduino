@@ -38,7 +38,7 @@ void Timer::update(float dt)
 
 bool Timer::isTriggered()
 {
-	return 0 > timer;
+	return 0 >= timer;
 }
 
 float Timer::getTimeRemaining()
