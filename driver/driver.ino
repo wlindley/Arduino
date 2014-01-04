@@ -1,4 +1,5 @@
 #include <Servo.h>
+#include <LiquidCrystal.h>
 #include "Program.h"
 #include "RGBLed.h"
 #include "Timer.h"
@@ -6,9 +7,9 @@
 #include "AbsoluteServo.h"
 #include "PiezoSpeaker.h"
 
-#include "KnockLockProgram.h"
+#include "CrystalBallProgram.h"
 
-KnockLockProgram program;
+CrystalBallProgram program;
 
 void setup()
 {
