@@ -9,6 +9,8 @@ public:
 	AbsoluteServo();
 	AbsoluteServo(int iPin);
 	void setPercent(float iPercent);
+	float getCurrentPercent();
+	float getTargetPercent();
 
 private:
 	int outputPin;

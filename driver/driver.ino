@@ -6,9 +6,9 @@
 #include "AbsoluteServo.h"
 #include "PiezoSpeaker.h"
 
-#include "MotionNightLightProgram.h"
+#include "KnockLockProgram.h"
 
-MotionNightLightProgram program;
+KnockLockProgram program;
 
 void setup()
 {

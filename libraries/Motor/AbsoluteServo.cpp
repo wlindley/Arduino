@@ -25,3 +25,13 @@ void AbsoluteServo::setPercent(float iPercent)
 	servo.write(newPos);
 	prevPos = newPos;
 }
+
+float AbsoluteServo::getCurrentPercent()
+{
+	return servo.read() / 179.f;
+}
+
+float AbsoluteServo::getTargetPercent()
+{
+	return prevPos / 179.f;
+}

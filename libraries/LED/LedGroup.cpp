@@ -9,6 +9,14 @@ LedGroup::LedGroup() : Led()
 	}
 }
 
+LedGroup::LedGroup(bool iIsDigital) : Led(-1, isDigital)
+{
+	for (int i = 0; i < MAX_PINS; i++)
+	{
+		outputPins[i] = -1;
+	}
+}
+
 bool LedGroup::addLed(int iPin)
 {
 	for (int i = 0; i < MAX_PINS; i++)
@@ -25,12 +33,11 @@ bool LedGroup::addLed(int iPin)
 
 void LedGroup::setIntensity(float iIntensity)
 {
-	int intensity = iIntensity * 255;
 	for (int i = 0; i < MAX_PINS; i++)
 	{
 		if (-1 != outputPins[i])
 		{
-			analogWrite(outputPins[i], intensity);
+			writeToPin(outputPins[i], iIntensity);
 		}
 	}
 }

@@ -5,6 +5,7 @@
 #######################################
 # Datatypes (KEYWORD1)
 #######################################
+DigitalSensor	KEYWORD1
 Sensor KEYWORD1
 BufferedSensor	KEYWORD1
 TemperatureSensor	KEYWORD1
@@ -16,6 +17,7 @@ SampleBuffer	KEYWORD1
 #######################################
 # Methods and Functions (KEYWORD2)
 #######################################
+getState	KEYWORD1
 getReading	KEYWORD2
 getCelsius	KEYWORD2
 addSample	KEYWORD2

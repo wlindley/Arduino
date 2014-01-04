@@ -10,7 +10,9 @@ AbsoluteServo	KEYWORD1
 #######################################
 # Methods and Functions (KEYWORD2)
 #######################################
-setRotation	KEYWORD2
+setPercent	KEYWORD2
+getCurrentPercent	KEYWORD2
+getTargetPercent	KEYWORD2
 
 #######################################
 # Constants (LITERAL1)

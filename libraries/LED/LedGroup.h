@@ -7,6 +7,7 @@ class LedGroup : public Led
 {
 public:
 	LedGroup();
+	LedGroup(bool iIsDigital);
 	bool addLed(int iPin);
 	virtual void setIntensity(float iIntensity);
 
