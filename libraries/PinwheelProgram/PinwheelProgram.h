@@ -2,7 +2,7 @@
 #define __PINWHEELPROGRAM_H__
 
 #include "Program.h"
-#include "DigitalSensor.h"
+#include "PotSensor.h"
 
 class PinwheelProgram : public Program
 {
@@ -11,7 +11,7 @@ protected:
 	virtual void update(float dt);
 
 private:
-	DigitalSensor button;
+	PotSensor pot;
 };
 
 #endif
