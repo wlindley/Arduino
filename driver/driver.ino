@@ -8,9 +8,9 @@
 #include "PiezoSpeaker.h"
 #include "LCD.h"
 
-#include "CrystalBallProgram.h"
+#include "PinwheelProgram.h"
 
-CrystalBallProgram program;
+PinwheelProgram program;
 
 void setup()
 {
