@@ -3,7 +3,7 @@
 
 #include "Program.h"
 #include "DigitalSensor.h"
-#include <LiquidCrystal.h>
+#include "LCD.h"
 
 class CrystalBallProgram : public Program
 {
@@ -16,7 +16,7 @@ private:
 	const char* getRandomAnswer();
 
 	DigitalSensor tiltSwitch;
-	LiquidCrystal* lcd;
+	LCD* lcd;
 	bool prevTiltState;
 };
 

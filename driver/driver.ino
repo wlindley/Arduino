@@ -6,6 +6,7 @@
 #include "Sensor.h"
 #include "AbsoluteServo.h"
 #include "PiezoSpeaker.h"
+#include "LCD.h"
 
 #include "CrystalBallProgram.h"
 

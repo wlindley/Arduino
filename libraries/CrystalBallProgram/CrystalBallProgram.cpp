@@ -5,11 +5,9 @@ void CrystalBallProgram::init()
 {
 	tiltSwitch = DigitalSensor(12);
 
-	lcd = new LiquidCrystal(2, 3, 6, 7, 9, 10);
+	lcd = new LCD(2, 3, 6, 7, 9, 10);
 	lcd->begin(16, 2);
-	lcd->print("Ask the");
-	lcd->setCursor(0, 1);
-	lcd->print("Crystal Ball!");
+	lcd->printLines("Ask the", "Crystal Ball!");
 
 	prevTiltState = false;
 }
@@ -31,11 +29,7 @@ void CrystalBallProgram::update(float dt)
 
 void CrystalBallProgram::showRandomAnswer()
 {
-	lcd->clear();
-	lcd->home();
-	lcd->print("The ball says:");
-	lcd->setCursor(0, 1);
-	lcd->print(getRandomAnswer());
+	lcd->printLines("The ball says:", getRandomAnswer());
 }
 
 const char* CrystalBallProgram::getRandomAnswer()
