@@ -3,6 +3,7 @@
 
 #include "Program.h"
 #include "PotSensor.h"
+#include "Motor.h"
 
 class PinwheelProgram : public Program
 {
@@ -12,6 +13,7 @@ protected:
 
 private:
 	PotSensor pot;
+	Motor motor;
 };
 
 #endif
