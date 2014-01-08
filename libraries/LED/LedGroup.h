@@ -1,19 +1,21 @@
 #ifndef __LEDGROUP_H__
 #define __LEDGROUP_H__
 
-#include "Led.h"
+#include "ILed.h"
 
-class LedGroup : public Led
+class LedGroup : public ILed
 {
 public:
 	LedGroup();
-	LedGroup(bool iIsDigital);
-	bool addLed(int iPin);
+	bool addLed(ILed* iLed);
+	ILed* get(int iIndex);
 	virtual void setIntensity(float iIntensity);
+	virtual void on();
+	virtual void off();
 
 protected:
-	static const int MAX_PINS = 10;
-	int outputPins[MAX_PINS];
+	static const int MAX_LEDS = 10;
+	ILed* leds[MAX_LEDS];
 };
 
 #endif

@@ -1,43 +1,65 @@
 #include "LedGroup.h"
 #include <Arduino.h>
 
-LedGroup::LedGroup() : Led()
+LedGroup::LedGroup()
 {
-	for (int i = 0; i < MAX_PINS; i++)
+	for (int i = 0; i < MAX_LEDS; i++)
 	{
-		outputPins[i] = -1;
+		leds[i] = NULL;
 	}
 }
 
-LedGroup::LedGroup(bool iIsDigital) : Led(-1, isDigital)
+bool LedGroup::addLed(ILed* iLed)
 {
-	for (int i = 0; i < MAX_PINS; i++)
+	for (int i = 0; i < MAX_LEDS; i++)
 	{
-		outputPins[i] = -1;
-	}
-}
-
-bool LedGroup::addLed(int iPin)
-{
-	for (int i = 0; i < MAX_PINS; i++)
-	{
-		if (-1 == outputPins[i])
+		if (NULL == leds[i])
 		{
-			outputPins[i] = iPin;
-			pinMode(iPin, OUTPUT);
+			leds[i] = iLed;
 			return true;
 		}
 	}
 	return false;
 }
 
+ILed* LedGroup::get(int iIndex)
+{
+	if (iIndex < 0 || iIndex >= MAX_LEDS || NULL == leds[iIndex])
+	{
+		return NULL;
+	}
+	return leds[iIndex];
+}
+
 void LedGroup::setIntensity(float iIntensity)
 {
-	for (int i = 0; i < MAX_PINS; i++)
+	for (int i = 0; i < MAX_LEDS; i++)
 	{
-		if (-1 != outputPins[i])
+		if (NULL != leds[i])
 		{
-			writeToPin(outputPins[i], iIntensity);
+			leds[i]->setIntensity(iIntensity);
+		}
+	}
+}
+
+void LedGroup::on()
+{
+	for (int i = 0; i < MAX_LEDS; i++)
+	{
+		if (NULL != leds[i])
+		{
+			leds[i]->on();
+		}
+	}
+}
+
+void LedGroup::off()
+{
+	for (int i = 0; i < MAX_LEDS; i++)
+	{
+		if (NULL != leds[i])
+		{
+			leds[i]->off();
 		}
 	}
 }
