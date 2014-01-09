@@ -8,9 +8,9 @@
 #include "PiezoSpeaker.h"
 #include "LCD.h"
 
-#include "DigitalHourglassProgram.h"
+#include "MotionNightLightProgram.h"
 
-DigitalHourglassProgram program;
+MotionNightLightProgram program;
 
 void setup()
 {

@@ -2,10 +2,10 @@
 #define __MOTIONNIGHTLIGHTPROGRAM_H__
 
 #include "Program.h"
-#include "PiezoSensor.h"
 #include "PhotoSensor.h"
 #include "LedGroup.h"
 #include "Timer.h"
+#include "DigitalSensor.h"
 
 class MotionNightLightProgram : public Program
 {
@@ -14,8 +14,8 @@ protected:
 	virtual void update(float dt);
 
 private:
-	PiezoSensor vibrationSensor;
 	PhotoSensor photoSensor;
+	DigitalSensor motionSensor;
 	LedGroup led;
 	Timer onTimer;
 	Timer fadeTimer;
