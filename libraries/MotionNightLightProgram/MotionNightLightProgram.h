@@ -3,9 +3,10 @@
 
 #include "Program.h"
 #include "PhotoSensor.h"
-#include "LedGroup.h"
+#include "ILed.h"
 #include "Timer.h"
 #include "DigitalSensor.h"
+#include "LedAnimator.h"
 
 class MotionNightLightProgram : public Program
 {
@@ -16,15 +17,9 @@ protected:
 private:
 	PhotoSensor photoSensor;
 	DigitalSensor motionSensor;
-	LedGroup led;
+	ILed* led;
 	Timer onTimer;
-	Timer fadeTimer;
-
-	enum LedState {
-		STATE_OFF,
-		STATE_ON,
-		STATE_FADE
-	} ledState;
+	LedAnimator ledAnimator;
 };
 
 #endif

@@ -32,6 +32,7 @@ void Led::off()
 
 void Led::writeToPin(int iPinNumber, float iIntensity)
 {
+	iIntensity = constrain(iIntensity, 0.f, 1.f);
 	if (isDigital)
 	{
 		digitalWrite(iPinNumber, iIntensity >= .5f ? HIGH : LOW);

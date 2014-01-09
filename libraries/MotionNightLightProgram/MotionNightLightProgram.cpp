@@ -1,64 +1,50 @@
 #include "MotionNightLightProgram.h"
 #include <Arduino.h>
+#include <math.h>
 #include "Led.h"
 
 const float LIGHT_THRESHOLD = .25f;
+const float FADE_ON_SPEED = .5f;
+const float FADE_OFF_SPEED = -.1f;
+const float QUICK_FADE_OFF_SPEED = -1.f;
 const float ON_TIME = 30.f;
-const float FADE_TIME = 30.f;
 
 void MotionNightLightProgram::init()
 {
 	photoSensor = PhotoSensor(A0);
 	motionSensor = DigitalSensor(2);
 
-	led.addLed(new Led(11, false));
-	led.addLed(new Led(13, true));
-	led.off();
+	led = new Led(11, false);
+
+	ledAnimator = LedAnimator(led);
+	ledAnimator.off();
 
 	onTimer.setDelay(ON_TIME);
-	fadeTimer.setDelay(FADE_TIME);
-
-	ledState = STATE_OFF;
 }
 
 void MotionNightLightProgram::update(float dt)
 {
 	onTimer.update(dt);
-	fadeTimer.update(dt);
-
-	Serial.println(motionSensor.getState());
+	ledAnimator.update(dt);
 
 	if (photoSensor.getPercent() > LIGHT_THRESHOLD)
 	{
 		onTimer.clear();
-		fadeTimer.clear();
-		led.off();
-		ledState = STATE_OFF;
+		ledAnimator.setIntensityVelocity(QUICK_FADE_OFF_SPEED);
+		if (0.001f >= abs(ledAnimator.getIntensityVelocity()))
+		{
+			delay(100);
+		}
 		return;
 	}
 
-	if (STATE_ON != ledState && motionSensor.getState())
+	if (motionSensor.getState())
 	{
-		//Serial.println("detected vibration!");
-		led.on();
+		ledAnimator.setIntensityVelocity(FADE_ON_SPEED);
 		onTimer.reset();
-		ledState = STATE_ON;
 	}
-	if (STATE_ON == ledState && onTimer.isTriggered())
+	if (onTimer.isTriggered())
 	{
-		//Serial.println("switching to fade");
-		fadeTimer.reset();
-		ledState = STATE_FADE;
-	}
-	if (STATE_FADE == ledState)
-	{
-		//Serial.println("fading");
-		led.setIntensity(fadeTimer.getTimeRemaining() / fadeTimer.getDelay());
-		if (fadeTimer.isTriggered())
-		{
-			//Serial.println("turning off");
-			led.off();
-			ledState = STATE_OFF;
-		}
+		ledAnimator.setIntensityVelocity(FADE_OFF_SPEED);
 	}
 }
