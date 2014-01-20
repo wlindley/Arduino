@@ -11,8 +11,8 @@ const float ON_TIME = 30.f;
 
 void MotionNightLightProgram::init()
 {
-	photoSensor = PhotoSensor(A0);
-	motionSensor = DigitalSensor(2);
+	photoSensor = PhotoSensor(A6);
+	motionSensor = DigitalSensor(12);
 
 	led = new Led(11, false);
 
