@@ -1,5 +1,6 @@
 #include <Servo.h>
 #include <LiquidCrystal.h>
+#include <NewPing.h>
 #include "Program.h"
 #include "Led.h"
 #include "Timer.h"
