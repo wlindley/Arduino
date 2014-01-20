@@ -70,14 +70,34 @@ Color hsvToRGB(float hue, float saturation, float value)
 
 RGBLed::RGBLed() : redPin(-1), greenPin(-1), bluePin(-1)
 {
-
+	currentColor.color = 0;
+	intensity = 0.f;
 }
 
 RGBLed::RGBLed(int iRedPin, int iGreenPin, int iBluePin) : redPin(iRedPin), greenPin(iGreenPin), bluePin(iBluePin)
 {
+	currentColor.color = 0;
+	intensity = 0.f;
+
 	pinMode(redPin, OUTPUT);
 	pinMode(greenPin, OUTPUT);
 	pinMode(bluePin, OUTPUT);
+}
+
+void RGBLed::setIntensity(float iIntensity)
+{
+	intensity = iIntensity;
+	updateLed();
+}
+
+void RGBLed::on()
+{
+	setIntensity(1.f);
+}
+
+void RGBLed::off()
+{
+	setIntensity(0.f);
 }
 
 void RGBLed::setRGB(int red, int green, int blue)
@@ -86,9 +106,10 @@ void RGBLed::setRGB(int red, int green, int blue)
 	{
 		return;
 	}
-	analogWrite(redPin, red);
-	analogWrite(greenPin, green);
-	analogWrite(bluePin, blue);
+	currentColor.r = red;
+	currentColor.g = green;
+	currentColor.b = blue;
+	updateLed();
 }
 
 void RGBLed::setRGB(float red, float green, float blue)
@@ -100,4 +121,11 @@ void RGBLed::setHSV(float hue, float saturation, float value)
 {
 	Color result = hsvToRGB(hue, saturation, value);
 	setRGB(result.r, result.g, result.b);
+}
+
+void RGBLed::updateLed()
+{
+	analogWrite(redPin, currentColor.r * intensity);
+	analogWrite(greenPin, currentColor.g * intensity);
+	analogWrite(bluePin, currentColor.b * intensity);
 }

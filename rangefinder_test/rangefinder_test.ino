@@ -14,6 +14,7 @@ RGBLed led(RED_PIN, GREEN_PIN, BLUE_PIN);
 
 void setup() {
   Serial.begin(9600);
+  led.on();
 }
 
 void loop() {
