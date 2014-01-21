@@ -1,23 +1,21 @@
 #include "Led.h"
 #include <Arduino.h>
 
-Led::Led() : outputPin(-1), isDigital(true) {}
-
-Led::Led(int iPin, bool iIsDigital) : outputPin(iPin), isDigital(iIsDigital)
+Led::Led(int pin, bool isDigital) : outputPin(pin), isDigital(isDigital)
 {
-	if (0 <= iPin)
+	if (0 <= pin)
 	{
-		pinMode(iPin, OUTPUT);
+		pinMode(pin, OUTPUT);
 	}
 }
 
-void Led::setIntensity(float iIntensity)
+void Led::setIntensity(float intensity)
 {
 	if (0 > outputPin)
 	{
 		return;
 	}
-	writeToPin(outputPin, iIntensity);
+	writeToPin(outputPin, intensity);
 }
 
 void Led::on()
@@ -30,15 +28,15 @@ void Led::off()
 	setIntensity(0.f);
 }
 
-void Led::writeToPin(int iPinNumber, float iIntensity)
+void Led::writeToPin(int pinNumber, float intensity)
 {
-	iIntensity = constrain(iIntensity, 0.f, 1.f);
+	intensity = constrain(intensity, 0.f, 1.f);
 	if (isDigital)
 	{
-		digitalWrite(iPinNumber, iIntensity >= .5f ? HIGH : LOW);
+		digitalWrite(pinNumber, intensity >= .5f ? HIGH : LOW);
 	}
 	else
 	{
-		analogWrite(iPinNumber, iIntensity * 255);
+		analogWrite(pinNumber, intensity * 255);
 	}
 }

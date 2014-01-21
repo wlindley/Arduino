@@ -9,35 +9,46 @@ LedGroup::LedGroup()
 	}
 }
 
-bool LedGroup::addLed(ILed* iLed)
+LedGroup::~LedGroup()
+{
+	for (int i = 0; i < MAX_LEDS; i++)
+	{
+		if (NULL != leds[i])
+		{
+			delete leds[i];
+		}
+	}
+}
+
+bool LedGroup::addLed(ILed* led)
 {
 	for (int i = 0; i < MAX_LEDS; i++)
 	{
 		if (NULL == leds[i])
 		{
-			leds[i] = iLed;
+			leds[i] = led;
 			return true;
 		}
 	}
 	return false;
 }
 
-ILed* LedGroup::get(int iIndex)
+ILed* LedGroup::get(int index)
 {
-	if (iIndex < 0 || iIndex >= MAX_LEDS || NULL == leds[iIndex])
+	if (index < 0 || index >= MAX_LEDS || NULL == leds[index])
 	{
 		return NULL;
 	}
-	return leds[iIndex];
+	return leds[index];
 }
 
-void LedGroup::setIntensity(float iIntensity)
+void LedGroup::setIntensity(float intensity)
 {
 	for (int i = 0; i < MAX_LEDS; i++)
 	{
 		if (NULL != leds[i])
 		{
-			leds[i]->setIntensity(iIntensity);
+			leds[i]->setIntensity(intensity);
 		}
 	}
 }

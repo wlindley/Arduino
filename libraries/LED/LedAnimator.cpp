@@ -1,9 +1,7 @@
 #include "LedAnimator.h"
 #include <Arduino.h>
 
-LedAnimator::LedAnimator() : led(NULL), intensity(0.f), intensityVelocity(0.f) { }
-
-LedAnimator::LedAnimator(ILed* iLed) : led(iLed), intensity(0.f), intensityVelocity(0.f) { }
+LedAnimator::LedAnimator(ILed* led) : led(led), intensity(0.f), intensityVelocity(0.f) { }
 
 void LedAnimator::update(float dt)
 {
@@ -15,9 +13,9 @@ void LedAnimator::update(float dt)
 	setIntensity(newIntensity);
 }
 
-void LedAnimator::setIntensityVelocity(float iIntensityVelocity)
+void LedAnimator::setIntensityVelocity(float intensityVelocity)
 {
-	intensityVelocity = iIntensityVelocity;
+	this->intensityVelocity = intensityVelocity;
 }
 
 float LedAnimator::getIntensityVelocity()
@@ -25,12 +23,12 @@ float LedAnimator::getIntensityVelocity()
 	return intensityVelocity;
 }
 
-void LedAnimator::setIntensity(float iIntensity)
+void LedAnimator::setIntensity(float intensity)
 {
-	intensity = iIntensity;
+	this->intensity = intensity;
 	if (NULL != led)
 	{
-		led->setIntensity(iIntensity);
+		led->setIntensity(intensity);
 	}
 }
 

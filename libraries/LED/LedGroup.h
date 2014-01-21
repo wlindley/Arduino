@@ -7,9 +7,10 @@ class LedGroup : public ILed
 {
 public:
 	LedGroup();
-	bool addLed(ILed* iLed);
-	ILed* get(int iIndex);
-	virtual void setIntensity(float iIntensity);
+	virtual ~LedGroup();
+	bool addLed(ILed* led);
+	ILed* get(int index);
+	virtual void setIntensity(float intensity);
 	virtual void on();
 	virtual void off();
 

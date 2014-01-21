@@ -68,25 +68,18 @@ Color hsvToRGB(float hue, float saturation, float value)
 	return out;
 }
 
-RGBLed::RGBLed() : redPin(-1), greenPin(-1), bluePin(-1)
+RGBLed::RGBLed(int redPin, int greenPin, int bluePin) : redPin(redPin), greenPin(greenPin), bluePin(bluePin), intensity(0.f)
 {
 	currentColor.color = 0;
-	intensity = 0.f;
-}
-
-RGBLed::RGBLed(int iRedPin, int iGreenPin, int iBluePin) : redPin(iRedPin), greenPin(iGreenPin), bluePin(iBluePin)
-{
-	currentColor.color = 0;
-	intensity = 0.f;
 
 	pinMode(redPin, OUTPUT);
 	pinMode(greenPin, OUTPUT);
 	pinMode(bluePin, OUTPUT);
 }
 
-void RGBLed::setIntensity(float iIntensity)
+void RGBLed::setIntensity(float intensity)
 {
-	intensity = iIntensity;
+	this->intensity = intensity;
 	updateLed();
 }
 
@@ -102,10 +95,6 @@ void RGBLed::off()
 
 void RGBLed::setRGB(int red, int green, int blue)
 {
-	if (-1 == redPin || -1 == greenPin || -1 == bluePin)
-	{
-		return;
-	}
 	currentColor.r = red;
 	currentColor.g = green;
 	currentColor.b = blue;

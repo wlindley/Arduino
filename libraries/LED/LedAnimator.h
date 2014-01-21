@@ -6,15 +6,14 @@
 class LedAnimator : ILed
 {
 public:
-	LedAnimator();
-	LedAnimator(ILed* iLed);
+	LedAnimator(ILed* led);
 	void update(float dt);
 
-	void setIntensityVelocity(float iIntensityVelocity);
+	void setIntensityVelocity(float intensityVelocity);
 	float getIntensityVelocity();
 
 	//ILed Interface
-	void setIntensity(float iIntensity);
+	void setIntensity(float intensity);
 	void on();
 	void off();
 

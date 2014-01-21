@@ -4,7 +4,7 @@
 class ILed
 {
 public:
-	virtual void setIntensity(float iIntensity) = 0;
+	virtual void setIntensity(float intensity) = 0;
 	virtual void on() = 0;
 	virtual void off() = 0;
 };

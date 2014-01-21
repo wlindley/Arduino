@@ -17,10 +17,9 @@ Color hsvToRGB(float hue, float saturation, float value);
 class RGBLed : public ILed
 {
 public:
-	RGBLed();
-	RGBLed(int iRedPin, int iGreenPin, int iBluePin);
+	RGBLed(int redPin, int greenPin, int bluePin);
 
-	virtual void setIntensity(float iIntensity);
+	virtual void setIntensity(float intensity);
 	virtual void on();
 	virtual void off();
 	
