@@ -2,22 +2,16 @@
 #include <Arduino.h>
 #include <math.h>
 
-AbsoluteServo::AbsoluteServo()
+AbsoluteServo::AbsoluteServo(int pin)
 {
-	outputPin = -1;
-	prevPos = 0;
-}
-
-AbsoluteServo::AbsoluteServo(int iPin)
-{
-	outputPin = iPin;
+	outputPin = pin;
 	servo.attach(outputPin);
 	prevPos = servo.read();
 }
 
-void AbsoluteServo::setPercent(float iPercent)
+void AbsoluteServo::setPercent(float percent)
 {
-	int newPos = constrain(iPercent * 179.f, 0, 179);
+	int newPos = constrain(percent * 179.f, 0, 179);
 	if (prevPos == newPos || !servo.attached())
 	{
 		return;

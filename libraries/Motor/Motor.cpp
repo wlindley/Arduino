@@ -1,11 +1,9 @@
 #include "Motor.h"
 #include <Arduino.h>
 
-Motor::Motor() : outputPin(-1), isDigital(true) {}
-
-Motor::Motor(int iPin, bool iIsDigital) : outputPin(iPin), isDigital(iIsDigital)
+Motor::Motor(int pin, bool isDigital) : outputPin(pin), isDigital(isDigital)
 {
-	pinMode(iPin, OUTPUT);
+	pinMode(pin, OUTPUT);
 }
 
 void Motor::on()
@@ -18,7 +16,7 @@ void Motor::off()
 	setSpeed(0.f);
 }
 
-void Motor::setSpeed(float iPercent)
+void Motor::setSpeed(float percent)
 {
 	if (0 > outputPin)
 	{
@@ -26,10 +24,10 @@ void Motor::setSpeed(float iPercent)
 	}
 	if (isDigital)
 	{
-		digitalWrite(outputPin, iPercent >= .5f ? HIGH : LOW);
+		digitalWrite(outputPin, percent >= .5f ? HIGH : LOW);
 	}
 	else
 	{
-		analogWrite(outputPin, iPercent * 255);
+		analogWrite(outputPin, percent * 255);
 	}
 }

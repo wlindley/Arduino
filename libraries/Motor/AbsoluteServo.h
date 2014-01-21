@@ -6,9 +6,8 @@
 class AbsoluteServo
 {
 public:
-	AbsoluteServo();
-	AbsoluteServo(int iPin);
-	void setPercent(float iPercent);
+	AbsoluteServo(int pin);
+	void setPercent(float percent);
 	float getCurrentPercent();
 	float getTargetPercent();
 

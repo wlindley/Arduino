@@ -4,11 +4,10 @@
 class Motor
 {
 public:
-	Motor();
-	Motor(int iPin, bool iIsDigital);
+	Motor(int pin, bool isDigital);
 	void on();
 	void off();
-	void setSpeed(float iPercent);
+	void setSpeed(float percent);
 
 protected:
 	int outputPin;
