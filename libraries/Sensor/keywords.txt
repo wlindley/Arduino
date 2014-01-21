@@ -13,6 +13,7 @@ PotSensor	KEYWORD1
 PhotoSensor	KEYWORD1
 PiezoSensor	KEYWORD1
 SampleBuffer	KEYWORD1
+UltrasonicRangeSensor	KEYWORD1
 
 #######################################
 # Methods and Functions (KEYWORD2)
@@ -28,6 +29,8 @@ getDegrees	KEYWORD2
 getRadians	KEYWORD2
 setMin	KEYWORD2
 setMax	KEYWORD2
+getMeters	KEYWORD2
+getMicroSeconds	KEYWORD2
 
 #######################################
 # Constants (LITERAL1)
