@@ -1,5 +1,5 @@
 #include "PiezoSpeaker.h"
-#include <Arduino.h>
+#include <NewTone.h>
 
 PiezoSpeaker::PiezoSpeaker()
 {
@@ -17,5 +17,5 @@ void PiezoSpeaker::playTone(float pitch, float duration)
 	{
 		return;
 	}
-	tone(outputPin, MIN_FREQUENCY + (pitch * (MAX_FREQUENCY - MIN_FREQUENCY)), duration * 1000);
+	NewTone(outputPin, MIN_FREQUENCY + (pitch * (MAX_FREQUENCY - MIN_FREQUENCY)), duration * 1000);
 }
