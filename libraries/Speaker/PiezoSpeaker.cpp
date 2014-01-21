@@ -1,14 +1,9 @@
 #include "PiezoSpeaker.h"
 #include <NewTone.h>
 
-PiezoSpeaker::PiezoSpeaker()
+PiezoSpeaker::PiezoSpeaker(int pin)
 {
-	outputPin = -1;
-}
-
-PiezoSpeaker::PiezoSpeaker(int iPin)
-{
-	outputPin = iPin;
+	outputPin = pin;
 }
 
 void PiezoSpeaker::playTone(float pitch, float duration)

@@ -4,8 +4,7 @@
 class PiezoSpeaker
 {
 public:
-	PiezoSpeaker();
-	PiezoSpeaker(int iPin);
+	PiezoSpeaker(int pin);
 	void playTone(float pitch, float duration); //pitch from min to max, duration in seconds
 
 private:
