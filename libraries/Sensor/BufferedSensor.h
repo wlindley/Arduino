@@ -7,8 +7,7 @@
 class BufferedSensor : public Sensor
 {
 public:
-	BufferedSensor() : Sensor() {}
-	BufferedSensor(int iPin) : Sensor(iPin) {}
+	BufferedSensor(int pin);
 	virtual int getReading();
 
 private:

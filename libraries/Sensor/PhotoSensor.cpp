@@ -1,12 +1,6 @@
 #include "PhotoSensor.h"
 
-PhotoSensor::PhotoSensor() : BufferedSensor()
-{
-	min = 0;
-	max = 1023;
-}
-
-PhotoSensor::PhotoSensor(int iPin) : BufferedSensor(iPin)
+PhotoSensor::PhotoSensor(int pin) : BufferedSensor(pin)
 {
 	min = 0;
 	max = 1023;
@@ -17,12 +11,12 @@ float PhotoSensor::getPercent()
 	return float(getReading() - min) / float(max - min);
 }
 
-void PhotoSensor::setMin(int iMin)
+void PhotoSensor::setMin(int min)
 {
-	min = iMin;
+	this->min = min;
 }
 
-void PhotoSensor::setMax(int iMax)
+void PhotoSensor::setMax(int max)
 {
-	max = iMax;
+	this->max = max;
 }

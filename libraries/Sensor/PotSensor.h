@@ -6,8 +6,7 @@
 class PotSensor : public Sensor
 {
 public:
-	PotSensor() : Sensor() {}
-	PotSensor(int iPin) : Sensor(iPin) {}
+	PotSensor(int pin);
 	float getPercent();
 	float getDegrees();
 	float getRadians();

@@ -3,15 +3,10 @@
 
 unsigned long UltrasonicRangeSensor::lastReadingTime = 0;
 
-UltrasonicRangeSensor::UltrasonicRangeSensor()
+UltrasonicRangeSensor::UltrasonicRangeSensor(int triggerPin, int echoPin, int maxDistance)
 {
-	sensor = NULL;
-}
-
-UltrasonicRangeSensor::UltrasonicRangeSensor(int iTriggerPin, int iEchoPin, int iMaxDistance)
-{
-	sensor = new NewPing(iTriggerPin, iEchoPin, iMaxDistance * 100); //convert from meters to centimeters
-	maxDistance = iMaxDistance;
+	sensor = new NewPing(triggerPin, echoPin, maxDistance * 100); //convert from meters to centimeters
+	this->maxDistance = maxDistance;
 }
 
 UltrasonicRangeSensor::~UltrasonicRangeSensor()
@@ -38,5 +33,5 @@ unsigned int UltrasonicRangeSensor::getMicroSeconds()
 		delay(MIN_READ_DELAY - delta);
 	}
 	lastReadingTime = millis();
-	return (NULL == sensor) ? 0 : sensor->ping();
+	return sensor->ping();
 }

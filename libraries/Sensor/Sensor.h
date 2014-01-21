@@ -4,8 +4,7 @@
 class Sensor
 {
 public:
-	Sensor();
-	Sensor(int iPin);
+	Sensor(int pin);
 	virtual int getReading();
 
 protected:

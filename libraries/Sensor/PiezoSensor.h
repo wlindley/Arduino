@@ -6,11 +6,10 @@
 class PiezoSensor : public BufferedSensor
 {
 public:
-	PiezoSensor() : BufferedSensor(), rangeMin(0), rangeMax(1023) {}
-	PiezoSensor(int iPin) : BufferedSensor(iPin), rangeMin(0), rangeMax(1023) {}
+	PiezoSensor(int pin);
 	float getPercent();
-	void setMin(int iMin);
-	void setMax(int iMax);
+	void setMin(int min);
+	void setMax(int max);
 
 private:
 	int rangeMin, rangeMax;

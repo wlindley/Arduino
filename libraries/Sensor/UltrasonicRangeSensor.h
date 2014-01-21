@@ -6,8 +6,7 @@ class NewPing;
 class UltrasonicRangeSensor
 {
 public:
-	UltrasonicRangeSensor();
-	UltrasonicRangeSensor(int iTriggerPin, int iEchoPin, int iMaxDistance);
+	UltrasonicRangeSensor(int triggerPin, int echoPin, int maxDistance);
 	virtual ~UltrasonicRangeSensor();
 
 	float getPercent();

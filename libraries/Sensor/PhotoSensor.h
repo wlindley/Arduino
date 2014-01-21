@@ -6,11 +6,10 @@
 class PhotoSensor : public BufferedSensor
 {
 public:
-	PhotoSensor();
-	PhotoSensor(int iPin);
+	PhotoSensor(int pin);
 	float getPercent();
-	void setMin(int iMin);
-	void setMax(int iMax);
+	void setMin(int min);
+	void setMax(int max);
 
 private:
 	int min, max;

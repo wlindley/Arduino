@@ -6,8 +6,7 @@
 class TemperatureSensor : public BufferedSensor
 {
 public:
-	TemperatureSensor() : BufferedSensor() {}
-	TemperatureSensor(int iPin) : BufferedSensor(iPin) {}
+	TemperatureSensor(int pin);
 	float getCelsius();
 };
 

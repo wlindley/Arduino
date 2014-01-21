@@ -4,8 +4,7 @@
 class DigitalSensor
 {
 public:
-	DigitalSensor();
-	DigitalSensor(int iPin);
+	DigitalSensor(int pin);
 	virtual bool getState();
 
 private:
