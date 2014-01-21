@@ -7,6 +7,7 @@
 #######################################
 RepeatTimer	KEYWORD1
 Timer	KEYWORD1
+DeltaTimer	KEYWORD1
 
 #######################################
 # Methods and Functions (KEYWORD2)
@@ -20,6 +21,7 @@ clear	KEYWORD2
 addDelay	KEYWORD2
 isTriggered	KEYWORD2
 getTimeRemaining	KEYWORD2
+updateDt	KEYWORD2
 
 #######################################
 # Constants (LITERAL1)
