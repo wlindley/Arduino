@@ -12,7 +12,7 @@ const float LIGHT_THRESHOLD = .25f;
 const float FADE_ON_SPEED = .5f;
 const float FADE_OFF_SPEED = -.1f;
 const float QUICK_FADE_OFF_SPEED = -1.f;
-const float ON_TIME = 30.f;
+const float ON_TIME = 45.f;
 
 DeltaTimer deltaTimer;
 PhotoSensor photoSensor(A6);
