@@ -6,6 +6,11 @@
 #include "Kalman.h"
 #include "RGBLed.h"
 
+#define PRINT_ROLL
+#define PRINT_PITCH
+#define PRINT_Z_MOVEMENT
+#define PRINT_TEMP
+
 const int DELAY = 20;
 const float Z_DEAD_ZONE = 200.f;
 
@@ -101,11 +106,18 @@ void updateSensor() {
 }
 
 void printReadings() {
+    #ifdef PRINT_ROLL
     Serial.print("roll: ");
     Serial.print(kalXAngle); Serial.print("\t");
-    Serial.print("\tpitch: ");
+    #endif
+    
+    #ifdef PRINT_PITCH
+    Serial.print("pitch: ");
     Serial.print(kalYAngle); Serial.print("\t");
-    Serial.print("\tz movement: ");
+    #endif
+    
+    #ifdef PRINT_Z_MOVEMENT
+    Serial.print("z movement: ");
     float zAccel = bufferZ.getAverage();
     if (Z_DEAD_ZONE < zAccel) {
         Serial.print(" up ");
@@ -114,6 +126,13 @@ void printReadings() {
     } else {
         Serial.print("----");
     }
+    Serial.print("\t");
+    #endif
+    
+    #ifdef PRINT_TEMP
     Serial.print("\ttemp: ");
-    Serial.println(temp);
+    Serial.print(temp);
+    #endif
+    
+    Serial.println(" ");
 }
