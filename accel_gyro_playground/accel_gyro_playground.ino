@@ -4,13 +4,12 @@
 #include "SampleBuffer.h"
 #include "NewPing.h"
 #include "Kalman.h"
+#include "RGBLed.h"
 
-const int LED_PIN = 13;
 const int DELAY = 20;
 const float Z_DEAD_ZONE = 200.f;
 
-#define PRINT_AVERAGE
-
+RGBLed led(11, 9, 10);
 MPU6050 sensor;
 Kalman kalmanX, kalmanY;
 FloatSampleBuffer bufferZ;
@@ -20,11 +19,10 @@ double gyroXAngle, gyroYAngle, kalXAngle, kalYAngle;
 long prevTime;
 
 void setup() {
+    led.off();
     Serial.begin(9600);
     sensor.initialize();
     Serial.println(sensor.testConnection() ? "Connection successful" : "Connection failed");
-    pinMode(LED_PIN, OUTPUT);
-    digitalWrite(LED_PIN, HIGH);
     
     //initial readings
     sensor.getMotion6(&ax, &ay, &az, &gx, &gy, &gz);
@@ -47,11 +45,13 @@ void setup() {
         delay(DELAY);
     }
     Serial.println(" ");
+    led.on();
 }
 
 void loop() {
     updateSensor();
     printReadings();
+    led.setHSV((kalYAngle + 90.f) * 2.f, 1.f, 1.f);
     delay(DELAY);
 }
 
