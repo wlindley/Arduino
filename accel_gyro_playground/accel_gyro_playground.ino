@@ -6,16 +6,17 @@
 #include "Kalman.h"
 
 const int LED_PIN = 13;
-const int NUM_SAMPLES = 1000;
 const int DELAY = 20;
+const float Z_DEAD_ZONE = 200.f;
 
 #define PRINT_AVERAGE
 
 MPU6050 sensor;
 Kalman kalmanX, kalmanY;
+FloatSampleBuffer bufferZ;
 int16_t ax, ay, az, gx, gy, gz, temp;
 double roll, pitch;
-double gyroXAngle, gyroYAngle, compXAngle, compYAngle, kalXAngle, kalYAngle;
+double gyroXAngle, gyroYAngle, kalXAngle, kalYAngle;
 long prevTime;
 
 void setup() {
@@ -31,8 +32,8 @@ void setup() {
     pitch = atan2((float)-ax, (float)az) * RAD_TO_DEG;
     kalmanX.setAngle(roll);
     kalmanY.setAngle(pitch);
-    gyroXAngle = compXAngle = kalXAngle = roll;
-    gyroYAngle = compYAngle = kalYAngle = pitch;
+    gyroXAngle = kalXAngle = roll;
+    gyroYAngle = kalYAngle = pitch;
     prevTime = millis();
     printReadings();
     Serial.println(" ");
@@ -50,26 +51,32 @@ void setup() {
 
 void loop() {
     updateSensor();
-    double temp = sensor.getTemperature() / 340.0 + 36.53;
     printReadings();
     delay(DELAY);
 }
 
 void updateSensor() {
     sensor.getMotion6(&ax, &ay, &az, &gx, &gy, &gz);
+    
+    //update time
     long curTime = millis();
     float dt = curTime - prevTime / 1000.f;
     prevTime = curTime;
     
+    //update z accel
+    bufferZ.addSample((float)az - 17500.f);
+    
+    //update roll and pitch
     roll = atan((float)ay / sqrt((float)ax * ax + (float)az * az)) * RAD_TO_DEG;
     pitch = atan2((float)-ax, (float)az) * RAD_TO_DEG;
     
+    //update Kalman filter
     double gyroXRate = gx / 131.0;
     double gyroYRate = gy / 131.0;
     
     if ((pitch < -90.0 && kalYAngle > 90.0) || (pitch > 90.0 && kalYAngle < -90.f)) {
         kalmanY.setAngle(pitch);
-        gyroYAngle = compYAngle = kalYAngle = pitch;
+        gyroYAngle = kalYAngle = pitch;
     } else {
         kalYAngle = kalmanY.getAngle(pitch, gyroYRate, dt);
     }
@@ -82,28 +89,31 @@ void updateSensor() {
     gyroXAngle += gyroXRate * dt;
     gyroYAngle += gyroYRate * dt;
     
-    compXAngle = .93 * (compXAngle + gyroXRate * dt) + .07 * roll;
-    compYAngle = .93 * (compYAngle + gyroYRate * dt) + .07 * pitch;
-    
     if (gyroXAngle < -180.0 || gyroXAngle > 180.0) {
         gyroXAngle = kalXAngle;
     }
     if (gyroYAngle < -180.0 || gyroYAngle > 180.0) {
         gyroYAngle = kalYAngle;
     }
+    
+    //update temperature
+    temp = sensor.getTemperature() / 340.0 + 36.53;
 }
 
 void printReadings() {
     Serial.print("roll: ");
-    Serial.print(roll); Serial.print("\t");
-    Serial.print(gyroXAngle); Serial.print("\t");
-    Serial.print(compXAngle); Serial.print("\t");
     Serial.print(kalXAngle); Serial.print("\t");
     Serial.print("\tpitch: ");
-    Serial.print(pitch); Serial.print("\t");
-    Serial.print(gyroYAngle); Serial.print("\t");
-    Serial.print(compYAngle); Serial.print("\t");
     Serial.print(kalYAngle); Serial.print("\t");
+    Serial.print("\tz movement: ");
+    float zAccel = bufferZ.getAverage();
+    if (Z_DEAD_ZONE < zAccel) {
+        Serial.print(" up ");
+    } else if (-Z_DEAD_ZONE > zAccel) {
+        Serial.print("down");
+    } else {
+        Serial.print("----");
+    }
     Serial.print("\ttemp: ");
     Serial.println(temp);
 }
