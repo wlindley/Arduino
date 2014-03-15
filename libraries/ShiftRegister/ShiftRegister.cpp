@@ -7,7 +7,7 @@ ShiftRegister::ShiftRegister(int dataPin, int clockPin, int latchPin) : dataPin(
 	pinMode(latchPin, OUTPUT);
 }
 
-void ShiftRegister::send(bool data[], int length)
+void ShiftRegister::send(bool data[], unsigned int length)
 {
 	digitalWrite(latchPin, LOW);
 
@@ -21,7 +21,7 @@ void ShiftRegister::send(bool data[], int length)
 	digitalWrite(latchPin, HIGH);
 }
 
-void ShiftRegister::send(byte data[], int length)
+void ShiftRegister::send(byte data[], unsigned int length)
 {
 	digitalWrite(latchPin, LOW);
 
