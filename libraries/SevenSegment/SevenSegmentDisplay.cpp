@@ -1,6 +1,6 @@
 #include "SevenSegmentDisplay.h"
 
-const byte SevenSegmentDisplay::PATTERNS[] = {
+const byte SevenSegmentDisplay::NUMBER_PATTERNS[] = {
 	B11111100, //0
 	B01100000, //1
 	B11011010, //2
@@ -13,6 +13,8 @@ const byte SevenSegmentDisplay::PATTERNS[] = {
 	B11110110, //9
 };
 
+const byte SevenSegmentDisplay::DASH_PATTERN = B00000010;
+
 SevenSegmentDisplay::SevenSegmentDisplay(byte* data) : data(data)
 {
 
@@ -22,8 +24,13 @@ void SevenSegmentDisplay::displayNumber(byte number, bool decimalPoint)
 {
 	if (0 <= number && 10 > number)
 	{
-		displayCustom(PATTERNS[number] | (decimalPoint ? B00000001 : B00000000));
+		displayCustom(NUMBER_PATTERNS[number] | (decimalPoint ? B00000001 : B00000000));
 	}
+}
+
+void SevenSegmentDisplay::displayDash()
+{
+	displayCustom(DASH_PATTERN);
 }
 
 void SevenSegmentDisplay::displayCustom(byte values)
