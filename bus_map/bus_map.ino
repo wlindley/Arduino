@@ -47,6 +47,7 @@ void setup() {
     }
     
     timer.setDelay(UPDATE_DELAY);
+    timer.update(UPDATE_DELAY); //set timer to zero so that it updates timers immediately
     
     deltaTimer.updateDt();
 }
@@ -59,7 +60,7 @@ void loop() {
     
     if (timer.isTriggered()) {
         updateArrivals();
-        timer.reset();
+        timer.addDelay();
     }
     
     displayTimes();
