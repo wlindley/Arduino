@@ -3,6 +3,7 @@
 #include "Timer.h"
 #include "SevenSegmentDisplay.h"
 #include "ShiftRegister.h"
+#include <math.h>
 
 const float UPDATE_DELAY = 5.f; //in seconds
 const float PROCESSING_DELAY = 1.f; //in seconds
@@ -62,6 +63,7 @@ void loop() {
     }
     
     displayTimes();
+    Serial.println("----------------------");
     
     delay(PROCESSING_DELAY * 1000.f);
 }
@@ -80,29 +82,24 @@ void updateArrivals() {
 
 void displayTimes() {
     for (int i = 0; i < NUM_IDS; i++) {
-        printResult(arrivalData[i].busId, round(arrivalData[i].nextArrival));
+        Serial.print(arrivalData[i].busId);
+        Serial.print(": ");
+        float arrivalTime = arrivalData[i].nextArrival;
+        if (isnan(arrivalTime)) {
+            Serial.println("--");
+        } else {
+            Serial.println(round(arrivalTime / 60.f)); //convert seconds to minutes
+        }
     }
 }
 
-void updateArrival(const char* stopId, const char* busId) {
-    printResult(busId, getNextArrival(stopId, busId));
-}
-
-int getNextArrival(const char* stopId, const char* busId) {
+float getNextArrival(const char* stopId, const char* busId) {
     Process p;
     p.begin("/root/onebusaway/getNextArrivalAtStop.py");
     p.addParameter(stopId);
     p.addParameter(busId);
     p.run();
-    return p.exitValue();
-}
-
-void printResult(const char* busId, int minutes) {
-    Serial.print(busId);
-    Serial.print(": ");
-    if (0 > minutes || 100 <= minutes) {
-        Serial.println("--");
-    } else {
-        Serial.println(minutes);
-    }
+    char buffer[32];
+    p.readString().toCharArray(buffer, 32);
+    return atof(buffer);
 }
