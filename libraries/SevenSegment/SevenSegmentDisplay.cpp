@@ -15,7 +15,12 @@ const byte SevenSegmentDisplay::NUMBER_PATTERNS[] = {
 
 const byte SevenSegmentDisplay::DASH_PATTERN = B00000010;
 
-SevenSegmentDisplay::SevenSegmentDisplay(byte* data) : data(data)
+SevenSegmentDisplay::SevenSegmentDisplay(byte* data) : data(data), negate(false)
+{
+
+}
+
+SevenSegmentDisplay::SevenSegmentDisplay(byte* data, bool negate) : data(data), negate(negate)
 {
 
 }
@@ -35,7 +40,7 @@ void SevenSegmentDisplay::displayDash()
 
 void SevenSegmentDisplay::displayCustom(byte values)
 {
-	*data = values;
+	*data = negate ? ~values : values;
 }
 
 void SevenSegmentDisplay::displayCustom(bool values[], unsigned int numValues)
