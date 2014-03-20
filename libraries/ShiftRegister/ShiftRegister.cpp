@@ -5,19 +5,23 @@ ShiftRegister::ShiftRegister(int dataPin, int clockPin, int latchPin) : dataPin(
 	pinMode(dataPin, OUTPUT);
 	pinMode(clockPin, OUTPUT);
 	pinMode(latchPin, OUTPUT);
+	digitalWrite(dataPin, LOW);
+	digitalWrite(clockPin, LOW);
+	digitalWrite(latchPin, LOW);
 }
 
 void ShiftRegister::send(bool data[], unsigned int length)
 {
 	digitalWrite(latchPin, LOW);
 
-	for (int i = 0; i < length; i++)
+	for (int i = length - 1; i >= 0; i--)
 	{
 		digitalWrite(clockPin, LOW);
 		digitalWrite(dataPin, data[i] ? HIGH : LOW);
 		digitalWrite(clockPin, HIGH);
 	}
 
+	digitalWrite(clockPin, LOW);
 	digitalWrite(latchPin, HIGH);
 }
 
@@ -25,7 +29,7 @@ void ShiftRegister::send(byte data[], unsigned int length)
 {
 	digitalWrite(latchPin, LOW);
 
-	for (int i = 0; i < length; i++)
+	for (int i = length - 1; i >= 0; i--)
 	{
 		for (int j = 0; j < 8; j++)
 		{
@@ -34,6 +38,7 @@ void ShiftRegister::send(byte data[], unsigned int length)
 			digitalWrite(clockPin, HIGH);
 		}
 	}
-
+	
+	digitalWrite(clockPin, LOW);
 	digitalWrite(latchPin, HIGH);
 }
