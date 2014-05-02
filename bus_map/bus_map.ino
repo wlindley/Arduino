@@ -5,8 +5,8 @@
 #include "ShiftRegister.h"
 #include <math.h>
 
-const float UPDATE_DELAY = 5.f; //in seconds
-const float PROCESSING_DELAY = 1.f; //in seconds
+const float UPDATE_DELAY = 30.f; //in seconds
+const float PROCESSING_DELAY = 5.f; //in seconds
 
 struct ArrivalData {
     const char* stopId;
@@ -14,7 +14,6 @@ struct ArrivalData {
     float nextArrival;
 };
 
-ArrivalData arrivalData[4];
 enum ArrivalDataIds {
     TWENTY_ONE,
     TWENTY_ONE_EXPRESS,
@@ -22,6 +21,10 @@ enum ArrivalDataIds {
     ONE_TWENTY,
     NUM_IDS,
 };
+ArrivalData arrivalData[4];
+SevenSegmentDisplay* ssDisplay;
+ShiftRegister* shifter;
+byte data;
 
 DeltaTimer deltaTimer;
 Timer timer;
@@ -29,6 +32,9 @@ Timer timer;
 void setup() {
     Bridge.begin();
     Serial.begin(9600);
+    
+    ssDisplay = new SevenSegmentDisplay(&data, true);
+    shifter = new ShiftRegister(4, 2, 3);
     
     arrivalData[TWENTY_ONE].stopId = "22710";
     arrivalData[TWENTY_ONE].busId = "21";
@@ -58,9 +64,9 @@ void loop() {
     
     decrementTimers(dt);
     
-    if (timer.isTriggered()) {
+    if (timer.isTriggered() || busHasArrived()) {
         updateArrivals();
-        timer.addDelay();
+        timer.reset();
     }
     
     displayTimes();
@@ -70,14 +76,37 @@ void loop() {
 }
 
 void decrementTimers(float dt) {
+    Serial.println("decrementing timers");
     for (int i = 0; i < NUM_IDS; i++) {
-        arrivalData[i].nextArrival -= dt;
+        if (!isnan(arrivalData[i].nextArrival)) {
+            Serial.print(" decrementing ");
+            Serial.print(arrivalData[i].nextArrival);
+            Serial.print(" to ");
+            Serial.println(arrivalData[i].nextArrival - dt);
+            arrivalData[i].nextArrival -= dt;
+            if (0 > arrivalData[i].nextArrival) {
+                arrivalData[i].nextArrival = atof("nan");
+            }
+        }
     }
 }
 
-void updateArrivals() {
+bool busHasArrived() {
     for (int i = 0; i < NUM_IDS; i++) {
-        arrivalData[i].nextArrival = getNextArrival(arrivalData[i].stopId, arrivalData[i].busId);
+        if (!isnan(arrivalData[i].nextArrival) && 0 >= arrivalData[i].nextArrival) {
+            return true;
+        }
+    }
+    return false;
+}
+
+void updateArrivals() {
+    Serial.println("updating arrivals");
+    for (int i = 0; i < NUM_IDS; i++) {
+        float nextArrival = getNextArrival(arrivalData[i].stopId, arrivalData[i].busId);
+        if (!isnan(nextArrival)) {
+            arrivalData[i].nextArrival = nextArrival;
+        }
     }
 }
 
@@ -86,10 +115,19 @@ void displayTimes() {
         Serial.print(arrivalData[i].busId);
         Serial.print(": ");
         float arrivalTime = arrivalData[i].nextArrival;
-        if (isnan(arrivalTime)) {
+        if (isnan(arrivalTime) || 0 > arrivalTime) {
             Serial.println("--");
+            ssDisplay->displayDash();
+            shifter->send(&data, 1);
+            ssDisplay->displayDash();
+            shifter->send(&data, 1);
         } else {
-            Serial.println(round(arrivalTime / 60.f)); //convert seconds to minutes
+            int minutes = round(arrivalTime / 60.f); //convert seconds to minutes
+            Serial.println(minutes);
+            ssDisplay->displayNumber(minutes % 10);
+            shifter->send(&data, 1);
+            ssDisplay->displayNumber(minutes / 10);
+            shifter->send(&data, 1);
         }
     }
 }
@@ -102,5 +140,9 @@ float getNextArrival(const char* stopId, const char* busId) {
     p.run();
     char buffer[32];
     p.readString().toCharArray(buffer, 32);
+    Serial.print("Result for stop id ");
+    Serial.print(stopId);
+    Serial.print(": ");
+    Serial.println(buffer);
     return atof(buffer);
 }
