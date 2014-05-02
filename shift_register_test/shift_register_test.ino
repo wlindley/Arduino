@@ -10,8 +10,10 @@ void setup() {
     Serial.begin(9600);
     ssDisplay = new SevenSegmentDisplay(&data, true);
     shift = new ShiftRegister(4, 2, 3);
-    ssDisplay->displayDash();
-    shift->send(&data, 1);
+    ssDisplay->displayCustom(B00000010);
+    for(int i = 0; i < 8; i++) {
+        shift->send(&data, 1);
+    }
     delay(5000);
 }
 
