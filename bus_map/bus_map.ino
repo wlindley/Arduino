@@ -52,6 +52,8 @@ void setup() {
         arrivalData[i].nextArrival = -1;
     }
     
+    clearDisplays();
+    
     timer.setDelay(UPDATE_DELAY);
     timer.update(UPDATE_DELAY); //set timer to zero so that it updates timers immediately
     
@@ -73,6 +75,13 @@ void loop() {
     Serial.println("----------------------");
     
     delay(PROCESSING_DELAY * 1000.f);
+}
+
+void clearDisplays() {
+    for (int i = 0; i < NUM_IDS * 2; i++) {
+        ssDisplay->displayDash();
+        shifter->send(&data, 1);
+    }
 }
 
 void decrementTimers(float dt) {
