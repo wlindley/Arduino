@@ -1,6 +1,10 @@
 #include "SevenSegmentDisplay.h"
 #include "ShiftRegister.h"
 
+const int PIN_DATA = 4;
+const int PIN_CLOCK = 3;
+const int PIN_LATCH = 2;
+
 byte data;
 SevenSegmentDisplay* ssDisplay;
 ShiftRegister* shift;
