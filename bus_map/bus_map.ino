@@ -5,6 +5,10 @@
 #include "ShiftRegister.h"
 #include <math.h>
 
+const int PIN_DATA = 4;
+const int PIN_CLOCK = 3;
+const int PIN_LATCH = 2;
+
 const float UPDATE_DELAY = 30.f; //in seconds
 const float PROCESSING_DELAY = 5.f; //in seconds
 
@@ -34,19 +38,19 @@ void setup() {
     Serial.begin(9600);
     
     ssDisplay = new SevenSegmentDisplay(&data, true);
-    shifter = new ShiftRegister(4, 2, 3);
+    shifter = new ShiftRegister(PIN_DATA, PIN_CLOCK, PIN_LATCH);
     
     arrivalData[TWENTY_ONE].stopId = "22710";
-    arrivalData[TWENTY_ONE].busId = "21";
+    arrivalData[TWENTY_ONE].busId = "21"; //northbound
     
     arrivalData[TWENTY_ONE_EXPRESS].stopId = "22710";
-    arrivalData[TWENTY_ONE_EXPRESS].busId = "21E";
+    arrivalData[TWENTY_ONE_EXPRESS].busId = "21E"; //northbound
     
     arrivalData[ONE_TWENTY_EIGHT].stopId = "40010";
-    arrivalData[ONE_TWENTY_EIGHT].busId = "128";
+    arrivalData[ONE_TWENTY_EIGHT].busId = "128"; //north west bound
     
-    arrivalData[ONE_TWENTY].stopId = "21500";
-    arrivalData[ONE_TWENTY].busId = "120";
+    arrivalData[ONE_TWENTY].stopId = "36470";
+    arrivalData[ONE_TWENTY].busId = "128"; //south east bound
     
     for (int i = 0; i < NUM_IDS; i++) {
         arrivalData[i].nextArrival = -1;
