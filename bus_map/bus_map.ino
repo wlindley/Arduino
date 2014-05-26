@@ -11,6 +11,7 @@ const int PIN_LATCH = 2;
 
 const float UPDATE_DELAY = 30.f; //in seconds
 const float PROCESSING_DELAY = 5.f; //in seconds
+const float INITIAL_DELAY = 30.f; //in seconds
 
 struct ArrivalData {
     const char* stopId;
@@ -18,11 +19,12 @@ struct ArrivalData {
     float nextArrival;
 };
 
+//these are displayed in reverse order
 enum ArrivalDataIds {
-    TWENTY_ONE,
+    ONE_TWENTY_EIGHT_NW,
+    ONE_TWENTY_EIGHT_SE,
     TWENTY_ONE_EXPRESS,
-    ONE_TWENTY_EIGHT,
-    ONE_TWENTY,
+    TWENTY_ONE,
     NUM_IDS,
 };
 ArrivalData arrivalData[4];
@@ -46,17 +48,19 @@ void setup() {
     arrivalData[TWENTY_ONE_EXPRESS].stopId = "22710";
     arrivalData[TWENTY_ONE_EXPRESS].busId = "21E"; //northbound
     
-    arrivalData[ONE_TWENTY_EIGHT].stopId = "40010";
-    arrivalData[ONE_TWENTY_EIGHT].busId = "128"; //north west bound
+    arrivalData[ONE_TWENTY_EIGHT_NW].stopId = "40010";
+    arrivalData[ONE_TWENTY_EIGHT_NW].busId = "128"; //north west bound
     
-    arrivalData[ONE_TWENTY].stopId = "36470";
-    arrivalData[ONE_TWENTY].busId = "128"; //south east bound
+    arrivalData[ONE_TWENTY_EIGHT_SE].stopId = "36470";
+    arrivalData[ONE_TWENTY_EIGHT_SE].busId = "128"; //south east bound
     
     for (int i = 0; i < NUM_IDS; i++) {
-        arrivalData[i].nextArrival = -1;
+        arrivalData[i].nextArrival = NAN;
     }
     
     clearDisplays();
+    
+    delay(INITIAL_DELAY * 1000.f);
     
     timer.setDelay(UPDATE_DELAY);
     timer.update(UPDATE_DELAY); //set timer to zero so that it updates timers immediately
