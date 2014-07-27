@@ -5,7 +5,6 @@
 
 const float UPDATE_DELAY = 30.f; //in seconds
 const float PROCESSING_DELAY = 5.f; //in seconds
-const float INITIAL_DELAY = 10.f; //in seconds
 const float MAX_DISPLAY_TIME = 50.f; //in minutes
 
 struct ArrivalData {
@@ -48,8 +47,6 @@ void setup() {
     
     clearDisplays();
     
-    //delay(INITIAL_DELAY * 1000.f);
-    
     timer.setDelay(UPDATE_DELAY);
     timer.update(UPDATE_DELAY); //set timer to zero so that it updates timers immediately
     
@@ -74,24 +71,15 @@ void loop() {
 }
 
 void clearDisplays() {
-    for (int i = 0; i < NUM_IDS; i++) {
-        analogWrite(arrivalData[i].pinId, 0);
-    }
-    delay(500);
-    for (int i = 0; i < NUM_IDS; i++) {
-        analogWrite(arrivalData[i].pinId, 255);
-    }
-    delay(500);
-    for (int i = 0; i < NUM_IDS; i++) {
-        analogWrite(arrivalData[i].pinId, 0);
-    }
-    delay(500);
-    for (int i = 0; i < NUM_IDS; i++) {
-        analogWrite(arrivalData[i].pinId, 255);
-    }
-    delay(500);
-    for (int i = 0; i < NUM_IDS; i++) {
-        analogWrite(arrivalData[i].pinId, 0);
+    for (int j = 0; j < 3; j++) {
+        for (int i = 0; i < NUM_IDS; i++) {
+            analogWrite(arrivalData[i].pinId, 0);
+        }
+        delay(500);
+        for (int i = 0; i < NUM_IDS; i++) {
+            analogWrite(arrivalData[i].pinId, 255);
+        }
+        delay(500);
     }
 }
 
