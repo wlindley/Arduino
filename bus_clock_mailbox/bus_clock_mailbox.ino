@@ -22,11 +22,12 @@ DeltaTimer deltaTimer;
 void setup() {
     Serial.begin(9600);
     
-    initializeBusStops();
     clearDisplays();
     
     Bridge.begin();
     Mailbox.begin();
+    
+    initializeBusStops();
     
     deltaTimer.updateDt();
 }
@@ -56,6 +57,14 @@ void initializeBusStops() {
 }
 
 void registerForUpdates(String stopId, String busId, String arrivalIndex) {
+    Serial.println("--Registering for updates--");
+    Serial.print("Stop id: ");
+    Serial.println(stopId);
+    Serial.print("Bus id: ");
+    Serial.println(busId);
+    Serial.print("Arrival index: ");
+    Serial.println(arrivalIndex);
+    
     Process p;
     p.begin("/root/onebusaway/registerForUpdates.py");
     p.addParameter(stopId);
@@ -65,6 +74,14 @@ void registerForUpdates(String stopId, String busId, String arrivalIndex) {
 }
 
 void requestImmediateUpdate(String stopId, String busId, String arrivalIndex) {
+    Serial.println("--Requesting immediate update--");
+    Serial.print("Stop id: ");
+    Serial.println(stopId);
+    Serial.print("Bus id: ");
+    Serial.println(busId);
+    Serial.print("Arrival index: ");
+    Serial.println(arrivalIndex);
+    
     Process p;
     p.begin("/root/onebusaway/updateMailboxWithArrivalInfo.py");
     p.addParameter(stopId);
