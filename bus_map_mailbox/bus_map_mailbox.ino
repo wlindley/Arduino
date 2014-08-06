@@ -11,6 +11,7 @@ const int PIN_CLOCK = 3;
 const int PIN_LATCH = 2;
 
 const float MAX_DISPLAY_TIME = 50.f; //in minutes
+const float UPDATE_DELAY = 20.f; //in seconds
 
 struct ArrivalData {
     String stopId;
@@ -36,7 +37,6 @@ byte data;
 
 void setup() {
     Serial.begin(9600);
-    delay(5000);
     
     initializeDisplay();
     clearDisplays();
@@ -124,7 +124,7 @@ void loop() {
     decrementTimers(dt);
     checkMailbox();
     displayTimes();
-    delay(1000.f);
+    delay(UPDATE_DELAY * 1000.f);
 }
 
 void decrementTimers(float dt) {
