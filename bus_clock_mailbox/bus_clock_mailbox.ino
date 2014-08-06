@@ -5,6 +5,7 @@
 #include "DeltaTimer.h"
 
 const float MAX_DISPLAY_TIME = 50.f; //in minutes
+const float UPDATE_DELAY = 20.f; //in seconds
 
 struct ArrivalData {
     String stopId;
@@ -22,12 +23,13 @@ DeltaTimer deltaTimer;
 void setup() {
     Serial.begin(9600);
     
+    initializeBusStops();
     clearDisplays();
     
     Bridge.begin();
     Mailbox.begin();
     
-    initializeBusStops();
+    registerBuses();
     
     deltaTimer.updateDt();
 }
@@ -51,6 +53,11 @@ void initializeBusStops() {
     for (int i = 0; i < NUM_IDS; i++) {
         arrivalData[i].nextArrival = NAN;
         pinMode(arrivalData[i].pinId, OUTPUT);
+    }
+}
+
+void registerBuses() {
+    for (int i = 0; i < NUM_IDS; i++) {
         registerForUpdates(arrivalData[i].stopId, arrivalData[i].busId, arrivalData[i].arrivalIndex);
         requestImmediateUpdate(arrivalData[i].stopId, arrivalData[i].busId, arrivalData[i].arrivalIndex);
     }
@@ -108,7 +115,7 @@ void loop() {
     decrementTimers(dt);
     checkMailbox();
     displayTimes();
-    delay(100.f);
+    delay(UPDATE_DELAY * 1000.f);
 }
 
 void decrementTimers(float dt) {
