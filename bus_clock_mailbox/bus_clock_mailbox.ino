@@ -4,7 +4,7 @@
 #include <math.h>
 #include "DeltaTimer.h"
 
-const float MAX_DISPLAY_TIME = 50.f; //in minutes
+const float MAX_DISPLAY_TIME = 20.f; //in minutes
 const float UPDATE_DELAY = 20.f; //in seconds
 
 struct ArrivalData {
@@ -35,19 +35,19 @@ void setup() {
 }
 
 void initializeBusStops() {
-    arrivalData[0].stopId = "22710";
-    arrivalData[0].busId = "21"; //northbound
+    arrivalData[0].stopId = "400";
+    arrivalData[0].busId = "21";
     arrivalData[0].arrivalIndex = "0";
     arrivalData[0].pinId = 3;
     
-    arrivalData[1].stopId = "22710";
-    arrivalData[1].busId = "21"; //northbound
-    arrivalData[1].arrivalIndex = "1";
+    arrivalData[1].stopId = "400";
+    arrivalData[1].busId = "55";
+    arrivalData[1].arrivalIndex = "0";
     arrivalData[1].pinId = 10;
     
-    arrivalData[2].stopId = "22710";
-    arrivalData[2].busId = "21"; //northbound
-    arrivalData[2].arrivalIndex = "2";
+    arrivalData[2].stopId = "400";
+    arrivalData[2].busId = "C Line";
+    arrivalData[2].arrivalIndex = "0";
     arrivalData[2].pinId = 11;
     
     for (int i = 0; i < NUM_IDS; i++) {
