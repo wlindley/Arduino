@@ -11,11 +11,11 @@
 
 //#define PRINT_ROLL
 //#define PRINT_PITCH
-//#define PRINT_Z_MOVEMENT
+#define PRINT_MOVEMENT
 //#define PRINT_TEMP
 
 const int DELAY = 20;
-const float Z_DEAD_ZONE = 200.f;
+const float DEAD_ZONE = 200.f;
 const float LAMP_TOGGLE_DELAY = 1.f;
 const float LAMP_MOTION_THRESHOLD = 40000.f;
 
@@ -26,7 +26,7 @@ Timer lampTimer;
 DeltaTimer deltaTimer;
 MPU6050 sensor;
 Kalman kalmanX, kalmanY;
-FloatSampleBuffer bufferZ;
+FloatSampleBuffer bufferX, bufferY, bufferZ;
 int16_t ax, ay, az, gx, gy, gz, temp;
 double roll, pitch;
 double gyroXAngle, gyroYAngle, kalXAngle, kalYAngle;
@@ -81,7 +81,9 @@ void updateSensor() {
     lampTimer.update(dt);
     sensor.getMotion6(&ax, &ay, &az, &gx, &gy, &gz);
     
-    //update z accel
+    //update accel
+    bufferX.addSample((float)ax + 600.f);
+    bufferY.addSample((float)ay - 450.f);
     bufferZ.addSample((float)az - 17500.f);
     checkLampActivation();
     
@@ -136,7 +138,6 @@ void checkLampActivation() {
             lampState = true;
         }
     }
-    Serial.println(currentSample - currentAverage);
 }
 
 void printReadings() {
@@ -150,12 +151,31 @@ void printReadings() {
     Serial.print(kalYAngle); Serial.print("\t");
     #endif
     
-    #ifdef PRINT_Z_MOVEMENT
-    Serial.print("z movement: ");
+    #ifdef PRINT_MOVEMENT
+    Serial.print("movement: ");
+    float xAccel = bufferX.getAverage();
+    float yAccel = bufferY.getAverage();
     float zAccel = bufferZ.getAverage();
-    if (Z_DEAD_ZONE < zAccel) {
+    
+    if (DEAD_ZONE < xAccel) {
+        Serial.print("rght ");
+    } else if (-DEAD_ZONE > xAccel) {
+        Serial.print("left ");
+    } else {
+        Serial.print("---- ");
+    }
+    
+    if (DEAD_ZONE < yAccel) {
+        Serial.print("fwrd ");
+    } else if (-DEAD_ZONE > yAccel) {
+        Serial.print("bkwd ");
+    } else {
+        Serial.print("---- ");
+    }
+    
+    if (DEAD_ZONE < zAccel) {
         Serial.print(" up ");
-    } else if (-Z_DEAD_ZONE > zAccel) {
+    } else if (-DEAD_ZONE > zAccel) {
         Serial.print("down");
     } else {
         Serial.print("----");
