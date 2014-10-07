@@ -32,6 +32,10 @@ void setup() {
 }
 
 void initializeBusStops() {
+    arrivalData[0].pinId = 3;
+    arrivalData[1].pinId = 10;
+    arrivalData[2].pinId = 11;
+    
     for (int i = 0; i < NUM_IDS; i++) {
         arrivalData[i].nextArrival = NAN;
         pinMode(arrivalData[i].pinId, OUTPUT);
@@ -47,6 +51,7 @@ void requestImmediateUpdate() {
 }
 
 void clearDisplays() {
+    Serial.println("--Clearing displays--");
     for (int j = 0; j < 3; j++) {
         for (int i = 0; i < NUM_IDS; i++) {
             analogWrite(arrivalData[i].pinId, 0);
@@ -68,14 +73,14 @@ void loop() {
 }
 
 void decrementTimers(float dt) {
-    //Serial.println("decrementing timers");
+    Serial.println("decrementing timers");
     bool needsUpdate = false;
     for (int i = 0; i < NUM_IDS; i++) {
         if (!isnan(arrivalData[i].nextArrival)) {
-            //Serial.print(" decrementing ");
-            //Serial.print(arrivalData[i].nextArrival);
-            //Serial.print(" to ");
-            //Serial.println(arrivalData[i].nextArrival - dt);
+            Serial.print(" decrementing ");
+            Serial.print(arrivalData[i].nextArrival);
+            Serial.print(" to ");
+            Serial.println(arrivalData[i].nextArrival - dt);
             arrivalData[i].nextArrival -= dt;
             if (0 > arrivalData[i].nextArrival) {
                 arrivalData[i].nextArrival = NAN;
@@ -147,17 +152,21 @@ float getArrivalDelta(String message) {
 }
 
 void displayTimes() {
+    Serial.println("--Displaying times--");
     for (int i = 0; i < NUM_IDS; i++) {
-        //Serial.print(arrivalData[i].busId);
-        //Serial.print(": ");
+        Serial.print(i);
+        Serial.print(": ");
         float arrivalTime = arrivalData[i].nextArrival;
         if (isnan(arrivalTime) || 0 > arrivalTime) {
-            //Serial.println("--");
+            Serial.println("--");
             analogWrite(arrivalData[i].pinId, 255);
         } else {
             float minutes = arrivalTime / 60.f; //convert seconds to minutes
-            //Serial.println(minutes);
-            analogWrite(arrivalData[i].pinId, constrain((minutes / MAX_DISPLAY_TIME) * 255.f, 0, 255)); //convert minutes to 0-255
+            Serial.print(minutes);
+            float pinValue = constrain((minutes / MAX_DISPLAY_TIME) * 255.f, 0, 255);
+            Serial.print(", ");
+            Serial.println(pinValue); 
+            analogWrite(arrivalData[i].pinId, pinValue); //convert minutes to 0-255
         }
     }
 }

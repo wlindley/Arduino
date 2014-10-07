@@ -5,26 +5,38 @@
 #include "NewPing.h"
 #include "Kalman.h"
 #include "RGBLed.h"
+#include "Led.h"
+#include "Timer.h"
+#include "DeltaTimer.h"
 
-#define PRINT_ROLL
-#define PRINT_PITCH
-#define PRINT_Z_MOVEMENT
-#define PRINT_TEMP
+//#define PRINT_ROLL
+//#define PRINT_PITCH
+//#define PRINT_Z_MOVEMENT
+//#define PRINT_TEMP
 
 const int DELAY = 20;
 const float Z_DEAD_ZONE = 200.f;
+const float LAMP_TOGGLE_DELAY = 1.f;
+const float LAMP_MOTION_THRESHOLD = 40000.f;
 
 RGBLed led(11, 9, 10);
+Led lamp(3, true);
+bool lampState;
+Timer lampTimer;
+DeltaTimer deltaTimer;
 MPU6050 sensor;
 Kalman kalmanX, kalmanY;
 FloatSampleBuffer bufferZ;
 int16_t ax, ay, az, gx, gy, gz, temp;
 double roll, pitch;
 double gyroXAngle, gyroYAngle, kalXAngle, kalYAngle;
-long prevTime;
 
 void setup() {
     led.off();
+    lamp.off();
+    lampState = false;
+    lampTimer.setDelay(LAMP_TOGGLE_DELAY);
+    lampTimer.update(LAMP_TOGGLE_DELAY);
     Serial.begin(9600);
     sensor.initialize();
     Serial.println(sensor.testConnection() ? "Connection successful" : "Connection failed");
@@ -37,11 +49,12 @@ void setup() {
     kalmanY.setAngle(pitch);
     gyroXAngle = kalXAngle = roll;
     gyroYAngle = kalYAngle = pitch;
-    prevTime = millis();
     printReadings();
     Serial.println(" ");
     
     //calibration
+    Serial.println("-----Calibration Starting-----");
+    lamp.on();
     for (int i = 0; i < 500; i++) {
         updateSensor();
         if (i % 50 == 0) {
@@ -49,8 +62,11 @@ void setup() {
         }
         delay(DELAY);
     }
-    Serial.println(" ");
+    lamp.off();
+    Serial.println("-----Calibration Complete-----");
     led.on();
+    
+    deltaTimer.updateDt();
 }
 
 void loop() {
@@ -61,15 +77,13 @@ void loop() {
 }
 
 void updateSensor() {
+    float dt = deltaTimer.updateDt();
+    lampTimer.update(dt);
     sensor.getMotion6(&ax, &ay, &az, &gx, &gy, &gz);
-    
-    //update time
-    long curTime = millis();
-    float dt = curTime - prevTime / 1000.f;
-    prevTime = curTime;
     
     //update z accel
     bufferZ.addSample((float)az - 17500.f);
+    checkLampActivation();
     
     //update roll and pitch
     roll = atan((float)ay / sqrt((float)ax * ax + (float)az * az)) * RAD_TO_DEG;
@@ -103,6 +117,26 @@ void updateSensor() {
     
     //update temperature
     temp = sensor.getTemperature() / 340.0 + 36.53;
+}
+
+void checkLampActivation() {
+    if (!lampTimer.isTriggered())
+        return;
+    float currentSample = (float)az - 17500.f;
+    float currentAverage = bufferZ.getAverage();
+    float diff = abs(currentSample - currentAverage);
+    if (diff > LAMP_MOTION_THRESHOLD) {
+        if (lampState) {
+            lamp.off();
+            lampTimer.reset();
+            lampState = false;
+        } else {
+            lamp.on();
+            lampTimer.reset();
+            lampState = true;
+        }
+    }
+    Serial.println(currentSample - currentAverage);
 }
 
 void printReadings() {
