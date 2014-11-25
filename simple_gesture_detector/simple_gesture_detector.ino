@@ -9,24 +9,30 @@
 #include "Timer.h"
 #include "DeltaTimer.h"
 
-//#define PRINT_SAMPLES
 #define PRINT_ROLL
 #define PRINT_PITCH
 #define PRINT_MOVEMENT
-#define PRINT_AVERAGES
-//#define PRINT_TEMP
+
+enum GestureState {
+    GS_UNKNOWN,
+    GS_START,
+    GS_MOVED_RIGHT,
+    GS_MOVED_DOWN,
+    GS_MOVED_LEFT,
+    GS_MOVED_UP
+} gestureState = GS_UNKNOWN;
 
 const int DELAY = 20;
-const int16_t FILTER_MASK = 0xFF80;
 const float DEAD_ZONE = 200.f;
-const float LAMP_TOGGLE_DELAY = 1.f;
-const float LAMP_MOTION_THRESHOLD = 40000.f;
+const float STATE_ACTIVATION_TIME = 1.f;
 
-RGBLed led(11, 9, 10);
 Led lamp(3, true);
 bool lampState;
-Timer lampTimer;
+
 DeltaTimer deltaTimer;
+Timer stateTimer;
+float xMovementAccumulator, yMovementAccumulator, zMovementAccumulator;
+
 MPU6050 sensor;
 Kalman kalmanX, kalmanY;
 FloatSampleBuffer bufferX, bufferY, bufferZ;
@@ -35,13 +41,10 @@ double roll, pitch;
 double gyroXAngle, gyroYAngle, kalXAngle, kalYAngle;
 
 void setup() {
-    led.off();
-    lamp.on();
+    lamp.off();
     lampState = false;
-    lampTimer.setDelay(LAMP_TOGGLE_DELAY);
-    lampTimer.update(LAMP_TOGGLE_DELAY);
+    stateTimer.setDelay(STATE_ACTIVATION_TIME);
     Serial.begin(9600);
-    Serial.println("Initializing sensor");
     sensor.initialize();
     Serial.println(sensor.testConnection() ? "Connection successful" : "Connection failed");
     
@@ -53,6 +56,7 @@ void setup() {
     kalmanY.setAngle(pitch);
     gyroXAngle = kalXAngle = roll;
     gyroYAngle = kalYAngle = pitch;
+    xMovementAccumulator = yMovementAccumulator = zMovementAccumulator = 0.f;
     printReadings();
     Serial.println(" ");
     
@@ -60,7 +64,7 @@ void setup() {
     Serial.println("-----Calibration Starting-----");
     lamp.on();
     for (int i = 0; i < 500; i++) {
-        updateSensor();
+        updateSensor(DELAY);
         if (i % 50 == 0) {
             printReadings();
         }
@@ -68,42 +72,25 @@ void setup() {
     }
     lamp.off();
     Serial.println("-----Calibration Complete-----");
-    led.on();
     
     deltaTimer.updateDt();
 }
 
 void loop() {
-    updateSensor();
+    float dt = deltaTimer.updateDt();
+    updateSensor(dt);
+    checkLampActivation(dt);
     printReadings();
-    led.setHSV((kalYAngle + 90.f) * 2.f, 1.f, 1.f);
     delay(DELAY);
 }
 
-void updateSensor() {
-    float dt = deltaTimer.updateDt();
-    lampTimer.update(dt);
+void updateSensor(float dt) {
     sensor.getMotion6(&ax, &ay, &az, &gx, &gy, &gz);
     
-    ax &= FILTER_MASK;
-    ay &= FILTER_MASK;
-    az &= FILTER_MASK;
-    
-    #ifdef PRINT_SAMPLES
-    Serial.print("x: ");
-    Serial.print(ax);
-    Serial.print(", y: ");
-    Serial.print(ay);
-    Serial.print(", z: ");
-    Serial.print(az);
-    Serial.print("\t");
-    #endif
-    
     //update accel
-    bufferX.addSample((float)ax/* + 600.f*/);
-    bufferY.addSample((float)ay/* - 450.f*/);
-    bufferZ.addSample((float)az - 16500.f);
-    checkLampActivation();
+    bufferX.addSample(getXReading());
+    bufferY.addSample(getYReading());
+    bufferZ.addSample(getZReading());
     
     //update roll and pitch
     roll = atan((float)ay / sqrt((float)ax * ax + (float)az * az)) * RAD_TO_DEG;
@@ -134,15 +121,62 @@ void updateSensor() {
     if (gyroYAngle < -180.0 || gyroYAngle > 180.0) {
         gyroYAngle = kalYAngle;
     }
-    
-    //update temperature
-    temp = sensor.getTemperature() / 340.0 + 36.53;
 }
 
-void checkLampActivation() {
-    if (!lampTimer.isTriggered())
+float getXReading() {
+    return (float)ax + 600.f;
+}
+
+float getYReading() {
+    return (float)ay - 450.f;
+}
+
+float getZReading() {
+    return (float)az - 17500.f;
+}
+
+void checkLampActivation(float dt) {
+    if (GS_UNKNOWN == gestureState) {
+        if (5.f <= abs(kalXAngle) && 5.f <= abs(kalYAngle)) {
+            stateTimer.update(dt);
+            if (stateTimer.isTriggered()) {
+                gestureState = GS_START;
+                stateTimer.reset();
+                xMovementAccumulator = yMovementAccumulator = zMovementAccumulator = 0.f;
+            }
+        } else {
+            stateTimer.reset();
+        }
+    } else if (GS_START == gestureState) {
+        xMovementAccumulator += bufferX.getAverage();
+        yMovementAccumulator += bufferY.getAverage();
+        zMovementAccumulator += bufferZ.getAverage();
+        
+        if (5000 <= abs(yMovementAccumulator) || 5000 <= abs(zMovementAccumulator)) {
+            gestureState = GS_UNKNOWN;
+        } else if (10000 <= xMovementAccumulator) {
+            gestureState = GS_MOVED_RIGHT;
+            xMovementAccumulator = yMovementAccumulator = zMovementAccumulator = 0.f;
+            lamp.on();
+        } else if (-10000 >= xMovementAccumulator) {
+            gestureState = GS_MOVED_LEFT;
+            xMovementAccumulator = yMovementAccumulator = zMovementAccumulator = 0.f;
+        }
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    /*if (!lampTimer.isTriggered())
         return;
-    float currentSample = (float)az - 17500.f;
+    float currentSample = getZReading();
     float currentAverage = bufferZ.getAverage();
     float diff = abs(currentSample - currentAverage);
     if (diff > LAMP_MOTION_THRESHOLD) {
@@ -155,14 +189,10 @@ void checkLampActivation() {
             lampTimer.reset();
             lampState = true;
         }
-    }
+    }*/
 }
 
 void printReadings() {
-    float xAccel = bufferX.getAverage();
-    float yAccel = bufferY.getAverage();
-    float zAccel = bufferZ.getAverage();
-    
     #ifdef PRINT_ROLL
     Serial.print("roll: ");
     Serial.print(kalXAngle); Serial.print("\t");
@@ -175,6 +205,9 @@ void printReadings() {
     
     #ifdef PRINT_MOVEMENT
     Serial.print("movement: ");
+    float xAccel = bufferX.getAverage();
+    float yAccel = bufferY.getAverage();
+    float zAccel = bufferZ.getAverage();
     
     if (DEAD_ZONE < xAccel) {
         Serial.print("rght ");
@@ -200,21 +233,6 @@ void printReadings() {
         Serial.print("----");
     }
     Serial.print("\t");
-    #endif
-    
-    #ifdef PRINT_AVERAGES
-    Serial.print("avg.x: ");
-    Serial.print(xAccel);
-    Serial.print(", avg.y: ");
-    Serial.print(yAccel);
-    Serial.print(", avg.z: ");
-    Serial.print(zAccel);
-    Serial.print("\t");
-    #endif
-    
-    #ifdef PRINT_TEMP
-    Serial.print("\ttemp: ");
-    Serial.print(temp);
     #endif
     
     Serial.println(" ");

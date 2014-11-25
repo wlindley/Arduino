@@ -1,11 +1,11 @@
 #include "RGBLed.h"
 
-RGBLed outLed(11, 9, 10);
+RGBLed outLed(3, 5, 6);
 float hue = 0.f;
 
 void setup()
 {
-    
+    outLed.setIntensity(1.f);
 }
 
 void loop()
@@ -16,5 +16,5 @@ void loop()
         hue -= 360.f;
     }
     outLed.setHSV(hue, 1.f, 1.f);
-    delay(10);
+    delay(100);
 };
