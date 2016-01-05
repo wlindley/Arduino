@@ -1,20 +1,21 @@
-#include "RGBLed.h"
+#include "NewPing.h"
+#include "RangedSensor.h"
+#include "Led.h"
 
-RGBLed outLed(3, 5, 6);
-float hue = 0.f;
+RangedSensor input(A5, 375, 525);
+Led output(13, false);
 
 void setup()
 {
-    outLed.setIntensity(1.f);
+    Serial.begin(9600);
+    output.on();
 }
 
 void loop()
 {
-    hue += 1.f;
-    if (hue >= 360.f)
-    {
-        hue -= 360.f;
-    }
-    outLed.setHSV(hue, 1.f, 1.f);
-    delay(100);
+    float p = input.getPercent();
+    output.setIntensity(p);
+    Serial.print("Percent: ");
+    Serial.println(p);
+    delay(50);
 };
